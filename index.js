@@ -25,13 +25,13 @@ async function run() {
 
   try {
     client.connect();
-       const productDB = client.db("productDB").collection('products')
-       const cartDB = client.db("productDB").collection('Cart')
-   
-       app.get('/product', async (req, res) => {
-         let result = await productDB.find().toArray()
-         res.send(result)
-       })
+    const productDB = client.db("productDB").collection('products')
+    const cartDB = client.db("productDB").collection('Cart')
+
+    app.get('/product', async (req, res) => {
+      let result = await productDB.find().toArray()
+      res.send(result)
+    })
 
 
     app.get('/product/:id', async (req, res) => {
@@ -67,8 +67,8 @@ async function run() {
       let result = await productDB.updateOne(filter, newProduct, options)
       res.send(result)
     })
-     //For Cart-------------------------------------------------------------------------------- 
-     app.get('/cart', async (req, res) => {
+    //For Cart-------------------------------------------------------------------------------- 
+    app.get('/cart', async (req, res) => {
       let result = await cartDB.find().toArray()
       res.send(result)
     })
@@ -86,7 +86,27 @@ async function run() {
       let result = await cartDB.deleteOne(filter)
       res.send(result)
     })
-  
+
+
+    // Search with title----------------------------------------------------------------------
+    app.get('/search/:title', async (req, res) => {
+      let brandName = req.params.title
+      let query = { brand: brandName }
+      const options = {
+        projection: {},
+      };
+      let result = await productDB.find(query, options).toArray()
+      res.send(result)
+    })
+
+
+    // Send a ping to confirm a successful connection
+    // await client.db("admin").command({ ping: 1 });
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+  }
+}
+
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
