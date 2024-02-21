@@ -46,6 +46,27 @@ async function run() {
       let result = await productDB.insertOne(data)
       res.send(result)
     })
+
+    app.put('/product/:id', async (req, res) => {
+      let id = req.params.id
+      let data = req.body
+      console.log(data);
+      let filter = { _id: new ObjectId(id) }
+      let options = { upsert: true }
+      let newProduct = {
+        $set: {
+          name: data.name,
+          brand: data.brand,
+          url: data.url,
+          type: data.type,
+          price: data.price,
+          rating: data.rating,
+          discription: data.discription
+        }
+      }
+      let result = await productDB.updateOne(filter, newProduct, options)
+      res.send(result)
+    })
   
 run().catch(console.dir);
 
