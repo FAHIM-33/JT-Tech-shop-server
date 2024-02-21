@@ -22,11 +22,20 @@ const client = new MongoClient(uri, {
 });
 
 async function run() {
-  
-run().catch(console.dir);
+  client.connect();
+  const productDB = client.db("productDB").collection('products')
+  const cartDB = client.db("productDB").collection('Cart')
 
-app.get('/', (req, res) => {
-  res.send("Server is up")
-})
+  app.get('/product', async (req, res) => {
+    let result = await productDB.find().toArray()
+    res.send(result)
+  })
 
-app.listen(port, () => { console.log("Server running at:", port); })
+
+  run().catch(console.dir);
+
+  app.get('/', (req, res) => {
+    res.send("Server is up")
+  })
+
+  app.listen(port, () => { console.log("Server running at:", port); })
