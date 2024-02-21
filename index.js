@@ -67,6 +67,25 @@ async function run() {
       let result = await productDB.updateOne(filter, newProduct, options)
       res.send(result)
     })
+     //For Cart-------------------------------------------------------------------------------- 
+     app.get('/cart', async (req, res) => {
+      let result = await cartDB.find().toArray()
+      res.send(result)
+    })
+
+    app.post('/cart', async (req, res) => {
+      let data = req.body
+      let { _id, ...rest } = data
+      let result = await cartDB.insertOne(rest)
+      res.send(result)
+    })
+
+    app.delete('/cart/:id', async (req, res) => {
+      let id = req.params.id;
+      let filter = { _id: new ObjectId(id) }
+      let result = await cartDB.deleteOne(filter)
+      res.send(result)
+    })
   
 run().catch(console.dir);
 
